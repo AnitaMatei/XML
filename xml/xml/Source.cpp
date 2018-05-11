@@ -5,8 +5,7 @@ using namespace std;
 
 int main() {
 
-
-
+	Mircea caine(5);
 
 	system("pause");
 	return 0;
