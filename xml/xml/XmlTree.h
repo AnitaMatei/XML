@@ -38,7 +38,9 @@ public:
 	void deleteAttrib(string name);
 	
 	void addToValue(string value);
-	int replaceValue(string value);
+	int replaceValue(string value);     
+
+	void replaceName(string value); //redenumeste nodul
 };
 
 

@@ -67,3 +67,6 @@ int XmlTree::replaceValue(string value) {  //daca nu are copii, atunci dau repla
 	}
 	else return 0;
 }
+void XmlTree::replaceName(string value) {
+	curr->name = value;
+}
