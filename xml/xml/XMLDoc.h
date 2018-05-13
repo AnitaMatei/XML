@@ -5,13 +5,14 @@
 #include <Windows.h>
 #include <fstream>
 #include <string>
+#include <vector>
 
 using namespace std;
 
 class XMLDoc {
 	char docReadName[100];
 	char docSaveName[100];
-	string docText[1000];
+	vector<string> docText;
 
 public:
 	XMLDoc(const char *docReadName=" ", const char *docSaveName=" ");
@@ -23,9 +24,6 @@ public:
 	char *getDocSaveName();
 	void setDocReadName(const char *s);
 	void setDocSaveName(const char *s);
-
-
-
 };
 
 
