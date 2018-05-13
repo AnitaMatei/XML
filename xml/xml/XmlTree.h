@@ -21,6 +21,8 @@ class XmlTree {
 	}*curr;
 	int tag = 1;
 
+	void recDeletion(nod* startingPoint);
+
 public:
 	void init();
 
@@ -30,7 +32,8 @@ public:
 	void goDownLast();
 	int goUp();
 	
-	void deleteOnlyCurr();
+	void deleteOnlyCurr();  //da delete doar la nodul actual, iar copii ii lipeste la parintele lui curr
+	void deleteCurr(); //da delete la toate nodurile sub curr, inclusiv; grija la folosirea functiei !!!MIRCEA!!!
 	
 	void afisareCurr();
 	
@@ -38,7 +41,9 @@ public:
 	void deleteAttrib(string name);
 	
 	void addToValue(string value);
-	int replaceValue(string value);
+	int replaceValue(string value);     
+
+	void replaceName(string value); //redenumeste nodul
 };
 
 

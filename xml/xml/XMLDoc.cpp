@@ -4,7 +4,7 @@
 XMLDoc::XMLDoc(const char *docReadName, const char *docSaveName) {
 	strcpy(this->docReadName,docReadName);
 	strcpy(this->docSaveName, docSaveName);
-
+	docTree.init();
 }
 
 void XMLDoc::read() {
