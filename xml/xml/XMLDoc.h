@@ -6,6 +6,7 @@
 #include <fstream>
 #include <string>
 #include <vector>
+#include "XmlTree.h"
 
 using namespace std;
 
@@ -13,6 +14,7 @@ class XMLDoc {
 	char docReadName[100];
 	char docSaveName[100];
 	vector<string> docText;
+	XmlTree docTree;
 
 public:
 	XMLDoc(const char *docReadName=" ", const char *docSaveName=" ");
