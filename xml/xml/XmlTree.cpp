@@ -31,7 +31,7 @@ int XmlTree::goUp() {
 	}
 	else return 0;
 }
-void XmlTree::deleteOnlyCurr() {   //dai delete la nodul curent, legi copii la parintele lui si nodul curent devine tot parintele
+void XmlTree::deleteOnlyCurr() {   
 	for (int i = 0; i < curr->adr.size(); i++)
 	{
 		curr->adr[i]->parent = curr->parent;
@@ -69,4 +69,18 @@ int XmlTree::replaceValue(string value) {  //daca nu are copii, atunci dau repla
 }
 void XmlTree::replaceName(string value) {
 	curr->name = value;
+}
+
+void XmlTree::recDeletion(nod* startingPoint) {
+	for (int i = 0; i < startingPoint->adr.size(); i++) {
+		if (startingPoint->adr[i]->adr.size()>0)
+			recDeletion(startingPoint->adr[i]);   //daca are copii urmatorul nod, avansezi pe el
+
+		delete startingPoint->adr[i];  //altfel, delete direct
+	}
+}
+
+void XmlTree::deleteCurr() {
+	nod* ccurr = curr;   //copie a lui curr pt a nu ramane cu pointeri pe care nu ii putem accesa
+	recDeletion(ccurr);
 }
