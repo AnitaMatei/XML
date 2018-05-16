@@ -23,10 +23,13 @@ int XmlTree::goDown(int index) {
 void XmlTree::goDownLast() {
 	curr = curr->adr[curr->adr.size() - 1];
 }
-int XmlTree::goUp() {
-	if (curr->parent != NULL)
+int XmlTree::goUp(int times) {
+	if (curr->parent != NULL && times>=1)
 	{
-		curr = curr->parent;
+		while (times > 0) {
+			curr = curr->parent;
+			times--;
+		}
 		return 1;
 	}
 	else return 0;
@@ -106,5 +109,6 @@ void XmlTree::displayTree() {
 	nod* ccurr = curr;  
 	while (ccurr->parent != NULL)       //ne intoarcem mai intai la radacina cu copia
 		ccurr = ccurr->parent;
-	recDisplay(ccurr,0);
+	cout << ccurr->name << endl;
+	recDisplay(ccurr,1);
 }

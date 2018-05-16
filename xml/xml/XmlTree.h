@@ -31,7 +31,7 @@ public:
 
 	int goDown(int index);         //coboara jos pe copilul precizat
 	void goDownLast();          //coboara jos pe ultimul copil adaugat
-	int goUp();
+	int goUp(int times);         //se urca sus de cate ori ii zici
 	
 	void deleteOnlyCurr();  //da delete doar la nodul actual, iar copii ii lipeste la parintele lui curr
 	void deleteCurr(); //da delete la toate nodurile sub curr, inclusiv; grija la folosirea functiei !!!MIRCEA!!!
