@@ -22,14 +22,15 @@ class XmlTree {
 	int tag = 1;
 
 	void recDeletion(nod* startingPoint);
+	void recDisplay(nod* startingPoint, int depth);
 
 public:
 	void init();
 
 	void insert();
 
-	int goDown(int index);
-	void goDownLast();
+	int goDown(int index);         //coboara jos pe copilul precizat
+	void goDownLast();          //coboara jos pe ultimul copil adaugat
 	int goUp();
 	
 	void deleteOnlyCurr();  //da delete doar la nodul actual, iar copii ii lipeste la parintele lui curr
@@ -44,6 +45,9 @@ public:
 	int replaceValue(string value);     
 
 	void replaceName(string value); //redenumeste nodul
+
+	void displayTree();     //afiseaza tot arborele
+
 };
 
 

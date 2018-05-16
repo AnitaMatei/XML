@@ -42,7 +42,7 @@ void XmlTree::deleteOnlyCurr() {
 	delete ccurr;
 }
 void XmlTree::afisareCurr() {
-	cout << curr->tag << '\n';
+	cout << curr->name << '\n';
 }
 void XmlTree::addAttrib(string name, string value) {  //adauga un atribut si valoarea lui 
 	curr->attrib.push_back(name);
@@ -83,4 +83,28 @@ void XmlTree::recDeletion(nod* startingPoint) {
 void XmlTree::deleteCurr() {
 	nod* ccurr = curr;   //copie a lui curr pt a nu ramane cu pointeri pe care nu ii putem accesa
 	recDeletion(ccurr);
+}
+
+
+void XmlTree::recDisplay(nod* startingPoint, int depth) {         //depth ca sa stiu la ce nivel ma aflu in tree
+	for (int i = 0; i < startingPoint->adr.size(); i++)
+	{
+		int cdepth=depth;
+		while (cdepth > 0)
+		{
+			cout << '\t';
+			cdepth--;
+		}
+		cout << startingPoint->adr[i]->name << endl;
+		if (startingPoint->adr[i]->adr.size() > 0)
+			recDisplay(startingPoint->adr[i],depth+1);
+	}
+}
+
+void XmlTree::displayTree() {
+	
+	nod* ccurr = curr;  
+	while (ccurr->parent != NULL)       //ne intoarcem mai intai la radacina cu copia
+		ccurr = ccurr->parent;
+	recDisplay(ccurr,0);
 }
