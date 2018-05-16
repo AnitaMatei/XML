@@ -1,12 +1,11 @@
 #include <iostream>
-#include <Windows.h>
+#include "XMLDoc.h"
 
 using namespace std;
 
 int main() {
-
-	Mircea caine(5);
-
+	XMLDoc doc("C:\\Users\\chido\\Documents\\Battlefield 1\\settings");
+	doc.read();
 	system("pause");
 	return 0;
 }
