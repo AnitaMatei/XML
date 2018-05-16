@@ -116,6 +116,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Source.cpp" />
+    <ClCompile Include="XMLDoc.cpp" />
+    <ClCompile Include="XmlTree.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="XMLDoc.h" />
+    <ClInclude Include="XmlTree.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
