@@ -24,14 +24,16 @@ class XmlTree {
 	void recDeletion(nod* startingPoint);
 	void recDisplay(nod* startingPoint, int depth);
 
+
 public:
 	void init();
 
 	void insert();
 
 	int goDown(int index);         //coboara jos pe copilul precizat
-	void goDownLast();          //coboara jos pe ultimul copil adaugat
+	int goDownLast();          //coboara jos pe ultimul copil adaugat
 	int goUp(int times);         //se urca sus de cate ori ii zici
+	int goUpMax();          //se urca sus pana la root
 	
 	void deleteOnlyCurr();  //da delete doar la nodul actual, iar copii ii lipeste la parintele lui curr
 	void deleteCurr(); //da delete la toate nodurile sub curr, inclusiv; grija la folosirea functiei !!!MIRCEA!!!

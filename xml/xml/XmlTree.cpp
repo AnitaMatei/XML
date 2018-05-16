@@ -20,8 +20,12 @@ int XmlTree::goDown(int index) {
 	}
 	else return 0;
 }
-void XmlTree::goDownLast() {
-	curr = curr->adr[curr->adr.size() - 1];
+int XmlTree::goDownLast() {
+	if (curr->adr.size() > 0) {
+		curr = curr->adr[curr->adr.size() - 1];
+		return 1;
+	}
+	else return 0;
 }
 int XmlTree::goUp(int times) {
 	if (curr->parent != NULL && times>=1)
@@ -34,6 +38,17 @@ int XmlTree::goUp(int times) {
 	}
 	else return 0;
 }
+
+int XmlTree::goUpMax() {
+	if (curr->parent != NULL)
+	{
+		while (curr->parent != NULL)
+			curr = curr->parent;
+		return 1;
+	}
+	return 0;
+}
+
 void XmlTree::deleteOnlyCurr() {   
 	for (int i = 0; i < curr->adr.size(); i++)
 	{
