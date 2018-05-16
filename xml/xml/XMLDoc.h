@@ -14,11 +14,13 @@ class XMLDoc {
 	char docReadName[100];
 	char docSaveName[100];
 	vector<string> docText;
-	XmlTree docTree;
-
+	XmlTree tree;
+	bool firstNod = true;
+	ifstream fin;
+	void skipChar(bool &nameEnded, char &c);
+	void parse();
 public:
 	XMLDoc(const char *docReadName=" ", const char *docSaveName=" ");
-
 	void read();
 	void save();
 	

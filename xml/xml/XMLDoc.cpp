@@ -4,10 +4,76 @@
 XMLDoc::XMLDoc(const char *docReadName, const char *docSaveName) {
 	strcpy(this->docReadName,docReadName);
 	strcpy(this->docSaveName, docSaveName);
-	docTree.init();
 }
-
+void XMLDoc::skipChar(bool &nameEnded, char &c) //sare peste incheierea unui nod
+{
+	nameEnded = true;
+	fin >> c;
+	tree.goUp(1);
+	while (c != '>')
+	{
+		fin >> c;
+	}
+}
+void XMLDoc::parse()
+{
+	char c;
+	string nume;
+	bool nameEnded = false;
+	while (fin >> c)
+	{
+		//daca s-a terminat numele nodului
+		if (c == ' ' || c == '>')
+		{
+			if (nameEnded == false)
+			{
+				tree.replaceName(nume);
+				nameEnded = true;
+			}
+		}
+		//verifica daca s-a terminat nodul curent si in caz afirmativ citeste pana cand incep datele sibling-ului
+		if (c == '/')
+		{
+			skipChar(nameEnded, c);
+		}
+		//se formeaza numele nodului
+		if (nameEnded == false && c != '<')
+			nume += c;
+		//cand se gaseste un nou nod, se insereaza si devine nodul curent
+		if (c == '<')
+		{
+			bool canInsert = true;
+			char curm = fin.peek();
+			if (curm == '/' && !firstNod)
+			{
+				skipChar(nameEnded, curm);
+				canInsert = false;
+			}
+			if (firstNod == true)
+			{
+				tree.init();
+				firstNod = false;
+			}
+			else if (canInsert)
+			{
+				tree.insert();
+				tree.goDownLast();
+			}
+			parse();
+		}
+	}
+}
 void XMLDoc::read() {
+	char c;
+	string nume;
+	fin.open(docReadName);
+	fin >> noskipws;
+	if (!fin.is_open())
+		cout << "Eroare la deschidere fisier";
+	else
+		parse();
+	tree.displayTree();
+	fin.close();
 }
 
 char* XMLDoc::getDocReadName() {
