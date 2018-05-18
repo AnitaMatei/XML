@@ -9,62 +9,83 @@ void XMLDoc::skipChar(bool &nameEnded, char &c) //sare peste incheierea unui nod
 {
 	nameEnded = true;
 	fin >> c;
-	tree.goUp(1);
-	while (c != '>')
+	while (c != '<')
 	{
 		fin >> c;
 	}
+}
+void XMLDoc::checkVer()
+{
+	char c;
+	fin.seekg(1);
+	fin >> c;
+	if (c == '?')
+	{
+		fin.seekg(0);
+		getline(fin, version);
+	}
+	else
+		fin.seekg(0);
 }
 void XMLDoc::parse()
 {
 	char c, curm;
 	string nume, atrib, valatrib;
-	bool nameEnded = false, atribEnded = false;
+	bool nameEnded = false, atribEnded = false, valueEnded = true;
 	while (fin >> c)
 	{
-		//conditii pt extragerea atributelor si valorilor lor
-		if (nameEnded && c != '>' && c != '/')
-		{
-			if (c == '=')
-			{
-				atribEnded = true;
-				fin >> c; fin >> c;
-			}
-			if (!atribEnded)
-				atrib += c;
-			else
-			{
-				curm = fin.peek();
-				valatrib += c;
-				if (curm == '"')
-				{
-					tree.addAttrib(atrib, valatrib);
-					atribEnded = false;
-					atrib.clear();
-					valatrib.clear();
-					fin >> c;
-				}
-			}
-		}
 		//daca s-a terminat numele nodului
 		if (nameEnded == false)
 		{
-			if (c == ' ' || c == '>')
+			if (c == ' ' || c == '>' || c == '/')
 			{
 				tree.replaceName(nume);
 				nameEnded = true;
 			}
 		}
 		//verifica daca s-a terminat nodul curent si in caz afirmativ citeste pana cand incep datele sibling-ului
-		if (c == '/')
+		if (c == '/' && valueEnded)
 		{
 			skipChar(nameEnded, c);
+			tree.goUp(1);
+		}
+		//conditii pt extragerea atributelor si valorilor lor
+		if (nameEnded)
+		{	
+			if (!atribEnded)
+				atrib += c;
+			curm = fin.peek();
+			if (curm == '=')
+			{
+				atribEnded = true;
+				fin >> c; fin >> c;
+				valueEnded = false;
+			}
+			if (!valueEnded)
+			{
+				fin >> c;
+				while (c != '"')
+				{
+					valatrib += c;
+					fin >> c;
+				}
+				if (valatrib != "")
+					tree.addAttrib(atrib, valatrib);
+				else
+					tree.addAttrib(atrib, "");
+				atrib.clear();
+				valatrib.clear();	
+				valueEnded = true;
+				curm = fin.peek();
+				if (curm == '>')
+					skipChar(nameEnded, c);
+			}
 		}
 		//se formeaza numele nodului
 		if (nameEnded == false && c != '<')
 			nume += c;
 		//cand se gaseste un nou nod, se insereaza si devine nodul curent
-		if (c == '<')
+		if (c == '<' && valueEnded)
 		{
 			bool canInsert = true;
 			curm = fin.peek();
@@ -91,13 +112,15 @@ void XMLDoc::read() {
 	fin.open(docReadName);
 	fin >> noskipws;
 	if (!fin.is_open())
-		cout << "Eroare la deschidere fisier";
+		cout << "Encountered an error when trying to open the file!";
 	else
+	{
+		checkVer();
 		parse();
-	//tree.displayTree();
+		//tree.displayTree();
+	}
 	fin.close();
 }
-
 char* XMLDoc::getDocReadName() {
 	return docReadName;
 }
@@ -146,8 +169,6 @@ void XMLDoc::createLine() {
 	
 	
 }
-
-
 void XMLDoc::save() {
 	tree.goUpMax();
 	fout.open(docSaveName);
