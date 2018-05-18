@@ -23,7 +23,7 @@ class XMLDoc {
 	void skipChar(bool &nameEnded, char &c);
 	void checkVer();
 	void parse();
-	void createLine();
+	void createLine(int);
 public:
 	XMLDoc(const char *docReadName=" ", const char *docSaveName=" ");
 	void read();
