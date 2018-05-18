@@ -51,7 +51,10 @@ void XMLDoc::parse()
 			{
 				fin >> c;
 				if (c != '"')
+				{
 					valatrib += c;
+					fin >> c;
+				}
 				while (c != '"')
 				{
 					valatrib += c;
@@ -77,7 +80,6 @@ void XMLDoc::parse()
 		{
 			skipChar(nameEnded, c);
 		}
-		
 		//se formeaza numele nodului
 		if (nameEnded == false && c != '<')
 			nume += c;
@@ -108,15 +110,12 @@ void XMLDoc::parse()
 void XMLDoc::read() {
 	fin.open(docReadName);
 	fin >> noskipws;
-	
 	if (!fin.is_open())
 		cout << "Eroare la deschidere fisier";
 	else
+	{
 		checkVer();
 		parse();
-		tree.goUpMax();
-		tree.goDown(1);
-		cout << tree.getAttribValue(1) << endl;
 	fin.close();
 }
 
