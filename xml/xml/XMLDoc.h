@@ -23,14 +23,11 @@ class XMLDoc {
 	void skipChar(bool &nameEnded, char &c);
 	void checkVer();
 	void parse();
-	void createLine(int depth);  //functia recursiva pt crearea fiecarei linii din xml
-
-
+	void createLine(int);
 public:
 	XMLDoc(const char *docReadName=" ", const char *docSaveName=" ");
 	void read();
 	void save();
-	
 	char *getDocReadName();
 	char *getDocSaveName();
 	void setDocReadName(const char *s);

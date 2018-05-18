@@ -9,7 +9,8 @@ void XMLDoc::skipChar(bool &nameEnded, char &c) //sare peste incheierea unui nod
 {
 	nameEnded = true;
 	fin >> c;
-	while (c != '<')
+	tree.goUp(1);
+	while (c != '>')
 	{
 		fin >> c;
 	}
@@ -34,6 +35,34 @@ void XMLDoc::parse()
 	bool nameEnded = false, atribEnded = false, valueEnded = true;
 	while (fin >> c)
 	{
+		//conditii pt extragerea atributelor si valorilor lor
+		if (nameEnded && c!='>')
+		{
+			if (atribEnded==false)
+				atrib += c;
+			curm = fin.peek();
+			if (curm == '=')
+			{
+				atribEnded = true;
+				fin >> c; fin >> c;
+				valueEnded = false;
+			}
+			if (valueEnded==false)
+			{
+				fin >> c;
+				if (c != '"')
+					valatrib += c;
+				while (c != '"')
+				{
+					valatrib += c;
+					fin >> c;
+				}
+				tree.addAttrib(atrib, valatrib);
+				atrib.clear();
+				valatrib = "";
+				valueEnded = true;
+			}
+		}
 		//daca s-a terminat numele nodului
 		if (nameEnded == false)
 		{
@@ -44,48 +73,16 @@ void XMLDoc::parse()
 			}
 		}
 		//verifica daca s-a terminat nodul curent si in caz afirmativ citeste pana cand incep datele sibling-ului
-		if (c == '/' && valueEnded)
+		if (c == '/')
 		{
 			skipChar(nameEnded, c);
-			tree.goUp(1);
 		}
-		//conditii pt extragerea atributelor si valorilor lor
-		if (nameEnded)
-		{	
-			if (!atribEnded)
-				atrib += c;
-			curm = fin.peek();
-			if (curm == '=')
-			{
-				atribEnded = true;
-				fin >> c; fin >> c;
-				valueEnded = false;
-			}
-			if (!valueEnded)
-			{
-				fin >> c;
-				while (c != '"')
-				{
-					valatrib += c;
-					fin >> c;
-				}
-				if (valatrib != "")
-					tree.addAttrib(atrib, valatrib);
-				else
-					tree.addAttrib(atrib, "");
-				atrib.clear();
-				valatrib.clear();	
-				valueEnded = true;
-				curm = fin.peek();
-				if (curm == '>')
-					skipChar(nameEnded, c);
-			}
-		}
+		
 		//se formeaza numele nodului
 		if (nameEnded == false && c != '<')
 			nume += c;
 		//cand se gaseste un nou nod, se insereaza si devine nodul curent
-		if (c == '<' && valueEnded)
+		if (c == '<')
 		{
 			bool canInsert = true;
 			curm = fin.peek();
@@ -113,13 +110,13 @@ void XMLDoc::read() {
 	fin >> noskipws;
 	
 	if (!fin.is_open())
-		cout << "Encountered an error when trying to open the file!";
+		cout << "Eroare la deschidere fisier";
 	else
-	{
 		checkVer();
 		parse();
 	fin.close();
 }
+
 char* XMLDoc::getDocReadName() {
 	return docReadName;
 }
@@ -133,19 +130,11 @@ void XMLDoc::setDocSaveName(const char *s) {
 	strcpy(docSaveName, s);
 }
 
-
-
-
-/////
-//creez fiecare linie in parte
-//daca nu are copii nodul actual, creez linia, o inchid si o afisez
-//daca are copii, atunci creez linia si o afisez, ma duc recursiv pe copii si la intoarcere il inchid
-///////
-void XMLDoc::createLine(int depth) {
+void XMLDoc::createLine() {
 	string line;
 	line.clear();
-	for (int i = 0; i <depth-1 ; i++)
-		line += "\t";
+	for (int i = 0; i < tree.getTag(); i++)
+		line += '\t';
 
 	line += "<" + tree.getName();
 	for (int i = 0; i < tree.getAttribNr(); i++)
@@ -160,19 +149,20 @@ void XMLDoc::createLine(int depth) {
 	}
 	else {
 		line += ">";
-		fout << line<<endl;	
+		fout << line<<endl;
 		for (int i = 0; i < tree.getChildrenNr(); i++)
 		{
 			tree.goDown(i);
-			createLine(depth+1);
+			createLine();
 			tree.goUp(1);
+			line.clear();
+			for (int j = 0; j < tree.getChildrenNr(); j++)
+				line += '\t';
+			line += "</" + tree.getName() + ">";
+			fout << line << endl;
 		}
-		line.clear();
-		for (int j = 0; j < depth-1; j++)
-			line += "\t";
-		line += "</" + tree.getName() + ">";
-		fout << line << endl;
 	}
+	
 	
 }
 void XMLDoc::save() {
@@ -181,3 +171,4 @@ void XMLDoc::save() {
 	createLine(0);
 	fout.close();
 }
+
