@@ -17,8 +17,10 @@ class XMLDoc {
 	XmlTree tree;
 	bool firstNod = true;
 	ifstream fin;
+	ofstream fout;
 	void skipChar(bool &nameEnded, char &c);
 	void parse();
+	void createLine();
 public:
 	XMLDoc(const char *docReadName=" ", const char *docSaveName=" ");
 	void read();

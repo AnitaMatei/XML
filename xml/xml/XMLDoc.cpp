@@ -88,3 +88,46 @@ void XMLDoc::setDocReadName(const char *s) {
 void XMLDoc::setDocSaveName(const char *s) {
 	strcpy(docSaveName, s);
 }
+
+void XMLDoc::createLine() {
+	string line;
+	line.clear();
+	for (int i = 0; i < tree.getTag(); i++)
+		line += '\t';
+
+	line == "<" + tree.getName() + " ";
+	for (int i = 0; i < tree.getAttribNr(); i++)
+	{
+		line += tree.getAttrib(i) + "=" + "\"" + tree.getAttribValue(i) + "\"";
+		if (i < tree.getAttribNr() - 1)
+			line += " ";
+	}
+	if (tree.getChildrenNr() == 0) {
+		line += "/>";
+		fout << line << endl;;
+	}
+	else {
+		line += ">";
+		fout << line<<endl;
+		for (int i = 0; i < tree.getChildrenNr(); i++)
+		{
+			tree.goDown(i);
+			createLine();
+			tree.goUp(1);
+			line.clear();
+			for (int j = 0; j < tree.getChildrenNr(); j++)
+				line += '\t';
+			line += "</" + tree.getName() + ">";
+			fout << line << endl;
+		}
+	}
+	
+	
+}
+
+
+void XMLDoc::save() {
+	tree.goUpMax();
+	fout.open(docSaveName);
+	createLine();
+}
