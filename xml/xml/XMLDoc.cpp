@@ -17,15 +17,39 @@ void XMLDoc::skipChar(bool &nameEnded, char &c) //sare peste incheierea unui nod
 }
 void XMLDoc::parse()
 {
-	char c;
-	string nume;
-	bool nameEnded = false;
+	char c, curm;
+	string nume, atrib, valatrib;
+	bool nameEnded = false, atribEnded = false;
 	while (fin >> c)
 	{
-		//daca s-a terminat numele nodului
-		if (c == ' ' || c == '>')
+		//conditii pt extragerea atributelor si valorilor lor
+		if (nameEnded && c != '>' && c != '/')
 		{
-			if (nameEnded == false)
+			if (c == '=')
+			{
+				atribEnded = true;
+				fin >> c; fin >> c;
+			}
+			if (!atribEnded)
+				atrib += c;
+			else
+			{
+				curm = fin.peek();
+				valatrib += c;
+				if (curm == '"')
+				{
+					tree.addAttrib(atrib, valatrib);
+					atribEnded = false;
+					atrib.clear();
+					valatrib.clear();
+					fin >> c;
+				}
+			}
+		}
+		//daca s-a terminat numele nodului
+		if (nameEnded == false)
+		{
+			if (c == ' ' || c == '>')
 			{
 				tree.replaceName(nume);
 				nameEnded = true;
@@ -43,7 +67,7 @@ void XMLDoc::parse()
 		if (c == '<')
 		{
 			bool canInsert = true;
-			char curm = fin.peek();
+			curm = fin.peek();
 			if (curm == '/' && !firstNod)
 			{
 				skipChar(nameEnded, curm);
@@ -64,15 +88,13 @@ void XMLDoc::parse()
 	}
 }
 void XMLDoc::read() {
-	char c;
-	string nume;
 	fin.open(docReadName);
 	fin >> noskipws;
 	if (!fin.is_open())
 		cout << "Eroare la deschidere fisier";
 	else
 		parse();
-	tree.displayTree();
+	//tree.displayTree();
 	fin.close();
 }
 
