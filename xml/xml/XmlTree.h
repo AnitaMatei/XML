@@ -57,7 +57,8 @@ public:
 	string getAttribValue(int index);
 	int getAttribNr();
 	int getChildrenNr();
-
+	string getLastAttrib();
+	string getLastAttribValue();
 };
 
 

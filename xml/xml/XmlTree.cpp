@@ -156,3 +156,10 @@ int XmlTree::getAttribNr() {
 int XmlTree::getChildrenNr() {
 	return curr->adr.size();
 }
+
+string XmlTree::getLastAttrib() {
+	return curr->attrib[curr->attrib.size() - 1];
+}
+string XmlTree::getLastAttribValue() {
+	return curr->attribValues[curr->attribValues.size() - 1];
+}
