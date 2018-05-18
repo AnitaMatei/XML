@@ -114,6 +114,9 @@ void XMLDoc::read() {
 	else
 		checkVer();
 		parse();
+		tree.goUpMax();
+		tree.goDown(1);
+		cout << tree.getAttribValue(1) << endl;
 	fin.close();
 }
 
