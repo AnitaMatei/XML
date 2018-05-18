@@ -13,12 +13,13 @@ using namespace std;
 class XMLDoc {
 	char docReadName[100];
 	char docSaveName[100];
-	vector<string> docText;
+	string version;
 	XmlTree tree;
 	bool firstNod = true;
 	ifstream fin;
 	ofstream fout;
 	void skipChar(bool &nameEnded, char &c);
+	void checkVer();
 	void parse();
 	void createLine();
 public:
