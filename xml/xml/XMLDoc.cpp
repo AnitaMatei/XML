@@ -64,6 +64,7 @@ void XMLDoc::parse()
 				atrib.clear();
 				valatrib = "";
 				valueEnded = true;
+				atribEnded = false;
 			}
 		}
 		//daca s-a terminat numele nodului
