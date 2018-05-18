@@ -49,6 +49,14 @@ public:
 	void replaceName(string value); //redenumeste nodul
 
 	void displayTree();     //afiseaza tot arborele
+	int showAttrib(int howMany = 1);  
+
+	int getTag();
+	string getName();
+	string getAttrib(int index);
+	string getAttribValue(int index);
+	int getAttribNr();
+	int getChildrenNr();
 
 };
 

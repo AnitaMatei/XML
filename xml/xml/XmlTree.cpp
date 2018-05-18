@@ -127,3 +127,32 @@ void XmlTree::displayTree() {
 	cout << ccurr->name << endl;
 	recDisplay(ccurr,1);
 }
+
+int XmlTree::showAttrib(int howMany ) {
+	if (howMany > curr->attrib.size())
+		return 0;
+	for (int i = 0; i < howMany; i++)
+		cout << curr->attrib[i] << "=\"" << curr->attribValues[i] << "\"";
+	return 1;
+
+}
+
+int XmlTree::getTag() {
+	return curr->tag;
+}
+string XmlTree::getName() {
+	return curr->name;
+}
+string XmlTree::getAttrib(int index) {
+	return curr->attrib[index];
+}
+string XmlTree::getAttribValue(int index) {
+	return curr->attribValues[index];
+}
+
+int XmlTree::getAttribNr() {
+	return curr->attrib.size();
+}
+int XmlTree::getChildrenNr() {
+	return curr->adr.size();
+}
