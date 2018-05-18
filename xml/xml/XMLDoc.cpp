@@ -108,12 +108,12 @@ void XMLDoc::parse()
 void XMLDoc::read() {
 	fin.open(docReadName);
 	fin >> noskipws;
+	
 	if (!fin.is_open())
 		cout << "Eroare la deschidere fisier";
 	else
 		checkVer();
 		parse();
-	tree.displayTree();
 	fin.close();
 }
 
@@ -129,16 +129,12 @@ void XMLDoc::setDocReadName(const char *s) {
 void XMLDoc::setDocSaveName(const char *s) {
 	strcpy(docSaveName, s);
 }
-/////
-//creez fiecare linie in parte
-//daca nu are copii nodul actual, creez linia, o inchid si o afisez
-//daca are copii, atunci creez linia si o afisez, ma duc recursiv pe copii si la intoarcere il inchid
-///////
-void XMLDoc::createLine(int depth) {
+
+void XMLDoc::createLine() {
 	string line;
 	line.clear();
-	for (int i = 0; i <depth - 1; i++)
-		line += "\t";
+	for (int i = 0; i < tree.getTag(); i++)
+		line += '\t';
 
 	line += "<" + tree.getName();
 	for (int i = 0; i < tree.getAttribNr(); i++)
@@ -153,20 +149,21 @@ void XMLDoc::createLine(int depth) {
 	}
 	else {
 		line += ">";
-		fout << line << endl;
+		fout << line<<endl;
 		for (int i = 0; i < tree.getChildrenNr(); i++)
 		{
 			tree.goDown(i);
-			createLine(depth + 1);
+			createLine();
 			tree.goUp(1);
+			line.clear();
+			for (int j = 0; j < tree.getChildrenNr(); j++)
+				line += '\t';
+			line += "</" + tree.getName() + ">";
+			fout << line << endl;
 		}
-		line.clear();
-		for (int j = 0; j < depth - 1; j++)
-			line += "\t";
-		line += "</" + tree.getName() + ">";
-		fout << line << endl;
 	}
-
+	
+	
 }
 void XMLDoc::save() {
 	tree.goUpMax();

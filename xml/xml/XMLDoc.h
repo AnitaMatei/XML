@@ -18,10 +18,12 @@ class XMLDoc {
 	bool firstNod = true;
 	ifstream fin;
 	ofstream fout;
+	string format;
+	
 	void skipChar(bool &nameEnded, char &c);
 	void checkVer();
 	void parse();
-	void createLine(int);
+	void createLine();
 public:
 	XMLDoc(const char *docReadName=" ", const char *docSaveName=" ");
 	void read();
