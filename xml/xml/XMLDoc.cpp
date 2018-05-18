@@ -116,7 +116,8 @@ void XMLDoc::read() {
 	{
 		checkVer();
 		parse();
-	fin.close();
+		fin.close();
+	}
 }
 
 char* XMLDoc::getDocReadName() {
