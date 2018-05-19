@@ -1,29 +1,26 @@
 #include "XMLDoc.h"
 
 
-XMLDoc::XMLDoc(const char *docReadName, const char *docSaveName) {
-	strcpy(this->docReadName,docReadName);
-	strcpy(this->docSaveName, docSaveName);
+XMLDoc::XMLDoc(const string docReadName, const string docSaveName) {
+	this->docReadName = docReadName;
+	this->docSaveName = docSaveName;
 }
 void XMLDoc::skipChar(bool &nameEnded, char &c) //sare peste incheierea unui nod
 {
 	nameEnded = true;
-	fin >> c;
-	tree.goUp(1);
+	fin >> c; tree.goUp(1);
 	while (c != '>')
 	{
 		fin >> c;
 	}
 }
-void XMLDoc::checkVer()
+void XMLDoc::checkVer()  //verifica daca exista date despre versiune
 {
 	char c;
-	fin.seekg(1);
-	fin >> c;
+	fin.seekg(1); fin >> c;
 	if (c == '?')
 	{
-		fin.seekg(0);
-		getline(fin, version);
+		fin.seekg(0); getline(fin, version);
 	}
 	else
 		fin.seekg(0);
@@ -43,44 +40,34 @@ void XMLDoc::parse()
 			curm = fin.peek();
 			if (curm == '=')
 			{
-				atribEnded = true;
+				atribEnded = true; valueEnded = false;
 				fin >> c; fin >> c;
-				valueEnded = false;
 			}
 			if (valueEnded==false)
 			{
 				fin >> c;
 				if (c != '"')
 				{
-					valatrib += c;
-					fin >> c;
+					valatrib += c; fin >> c;
 				}
 				while (c != '"')
 				{
-					valatrib += c;
-					fin >> c;
+					valatrib += c; fin >> c;
 				}
 				tree.addAttrib(atrib, valatrib);
-				atrib.clear();
-				valatrib = "";
-				valueEnded = true;
-				atribEnded = false;
+				atrib.clear(); valatrib = "";
+				valueEnded = true; atribEnded = false;
 			}
 		}
 		//daca s-a terminat numele nodului
 		if (nameEnded == false)
-		{
 			if (c == ' ' || c == '>' || c == '/')
 			{
-				tree.replaceName(nume);
-				nameEnded = true;
+				tree.replaceName(nume); nameEnded = true;
 			}
-		}
 		//verifica daca s-a terminat nodul curent si in caz afirmativ citeste pana cand incep datele sibling-ului
 		if (c == '/')
-		{
 			skipChar(nameEnded, c);
-		}
 		//se formeaza numele nodului
 		if (nameEnded == false && c != '<')
 			nume += c;
@@ -91,18 +78,15 @@ void XMLDoc::parse()
 			curm = fin.peek();
 			if (curm == '/' && !firstNod)
 			{
-				skipChar(nameEnded, curm);
-				canInsert = false;
+				skipChar(nameEnded, curm); canInsert = false;
 			}
 			if (firstNod == true)
 			{
-				tree.init();
-				firstNod = false;
+				tree.init(); firstNod = false;
 			}
 			else if (canInsert)
 			{
-				tree.insert();
-				tree.goDownLast();
+				tree.insert(); tree.goDownLast();
 			}
 			parse();
 		}
@@ -117,21 +101,21 @@ void XMLDoc::read() {
 	{
 		checkVer();
 		parse();
-		fin.close();
 	}
+	fin.close();
 }
 
-char* XMLDoc::getDocReadName() {
+string XMLDoc::getDocReadName() {
 	return docReadName;
 }
-char* XMLDoc::getDocSaveName() {
+string XMLDoc::getDocSaveName() {
 	return docSaveName;
 }
-void XMLDoc::setDocReadName(const char *s) {
-	strcpy(docReadName, s);
+void XMLDoc::setDocReadName(const string s) {
+	docReadName = s;
 }
-void XMLDoc::setDocSaveName(const char *s) {
-	strcpy(docSaveName, s);
+void XMLDoc::setDocSaveName(const string s) {
+	docSaveName = s;
 }
 
 /////
