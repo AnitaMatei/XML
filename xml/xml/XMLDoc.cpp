@@ -158,7 +158,6 @@ void XMLDoc::createLine(int depth) {
 
 }
 
-
 void XMLDoc::save() {
 	tree.goUpMax();
 	fout.open(docSaveName);
@@ -167,3 +166,76 @@ void XMLDoc::save() {
 	fout.close();
 }
 
+void XMLDoc::recsearch(string x, bool & p)
+{
+	int i;
+	if (p == true)
+	{
+		if (tree.getName() == x)
+		{
+			p = false;
+			return;
+		}
+		for (i=0;i<tree.getChildrenNr();i++)
+		{
+		    tree.goDown(i);
+		    recsearch(x,p);
+			if(p==true)
+			tree.goUp(1);
+		}
+	}
+	
+}
+
+void XMLDoc::gotonode(string x)
+{
+	bool c = true;
+    tree.goUpMax();
+    recsearch(x, c);
+}
+
+void XMLDoc::addNode(string nod, string name)
+{
+	gotonode(nod);
+	tree.insert();
+	tree.goDownLast();
+	tree.replaceName(name);
+}
+
+void XMLDoc::addAtribut(string nod, string atribut, string valatribut)
+{
+	gotonode(nod);
+	tree.addAttrib(atribut, valatribut);
+}
+
+void XMLDoc::deleteNode(string nod, string All_or_Current)
+{
+	gotonode(nod);
+	if (All_or_Current == "All")
+	{
+		tree.deleteCurr();
+	}
+	else
+	{
+		if (All_or_Current == "Current")
+			tree.deleteOnlyCurr();
+	}
+}
+
+void XMLDoc::gotoRoot()
+{
+	tree.goUpMax();
+}
+
+void XMLDoc::delAtribut(string nod)
+{
+	tree.deleteAttrib(nod);
+}
+
+
+string XMLDoc::ShowName()
+{
+	cout<<tree.getName()<<endl;
+	return tree.getName();
+
+}
