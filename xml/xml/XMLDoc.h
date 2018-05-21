@@ -30,14 +30,4 @@ public:
 	void setDocReadName(const string s);
 	void setDocSaveName(const string s);
 };
-
-
-
-
-
-
-
-
-
-
 #endif  //XMLDoc.h

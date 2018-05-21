@@ -1,11 +1,13 @@
 #include <iostream>
 #include <Windows.h>
+#include "XMLDoc.h"
 
 using namespace std;
 
 int main() {
-
-	Mircea caine(5);
-
+	////Soruce.cpp folosit pt debug
+	XMLDoc q("XMLin.xml", "XMLout.xml");
+	q.read();
+	q.save();
 	system("pause");
 }

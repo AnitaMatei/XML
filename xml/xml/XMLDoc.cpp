@@ -1,29 +1,25 @@
 #include "XMLDoc.h"
 
 
-XMLDoc::XMLDoc(const string docReadName, const string docSaveName) {
-	this->docReadName = docReadName;
-	this->docSaveName = docSaveName;
+XMLDoc::XMLDoc(const string docReadName, const string docSaveName)
+{
+	this->docReadName = docReadName; this->docSaveName = docSaveName;
 }
 void XMLDoc::skipChar(bool &nameEnded, char &c) //sare peste incheierea unui nod
 {
 	nameEnded = true;
 	fin >> c; tree.goUp(1);
 	while (c != '>')
-	{
 		fin >> c;
-	}
 }
 void XMLDoc::checkVer()  //verifica daca exista date despre versiune
 {
 	char c;
 	fin.seekg(1); fin >> c;
-	if (c == '?')
-	{
+	if (c == '?'){
 		fin.seekg(0); getline(fin, version);
 	}
-	else
-		fin.seekg(0);
+	else fin.seekg(0);
 }
 void XMLDoc::parse()
 {
@@ -35,7 +31,7 @@ void XMLDoc::parse()
 		//conditii pt extragerea atributelor si valorilor lor
 		if (nameEnded && c!='>')
 		{
-			if (atribEnded==false)
+			if (!atribEnded)
 				atrib += c;
 			curm = fin.peek();
 			if (curm == '=')
@@ -43,7 +39,7 @@ void XMLDoc::parse()
 				atribEnded = true; valueEnded = false;
 				fin >> c; fin >> c;
 			}
-			if (valueEnded==false)
+			if (!valueEnded)
 			{
 				fin >> c;
 				if (c != '"')
@@ -60,7 +56,7 @@ void XMLDoc::parse()
 			}
 		}
 		//daca s-a terminat numele nodului
-		if (nameEnded == false)
+		if (!nameEnded)
 			if (c == ' ' || c == '>' || c == '/')
 			{
 				tree.replaceName(nume); nameEnded = true;
@@ -69,7 +65,7 @@ void XMLDoc::parse()
 		if (c == '/')
 			skipChar(nameEnded, c);
 		//se formeaza numele nodului
-		if (nameEnded == false && c != '<')
+		if (!nameEnded && c != '<')
 			nume += c;
 		//cand se gaseste un nou nod, se insereaza si devine nodul curent
 		if (c == '<')
@@ -80,7 +76,7 @@ void XMLDoc::parse()
 			{
 				skipChar(nameEnded, curm); canInsert = false;
 			}
-			if (firstNod == true)
+			if (firstNod)
 			{
 				tree.init(); firstNod = false;
 			}
@@ -99,8 +95,7 @@ void XMLDoc::read() {
 		cout << "Eroare la deschidere fisier";
 	else
 	{
-		checkVer();
-		parse();
+		checkVer(); parse();
 	}
 	fin.close();
 }
