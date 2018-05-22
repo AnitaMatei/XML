@@ -31,6 +31,7 @@ public:
 	void addNode(string nod, string name);
 	void addAtribut(string nod, string atribut, string valatribut);
 	void deleteNode(string nod, string All_or_Current);
+	void delAtribut(string x);
 	void gotoRoot();
 
 	string ShowName();

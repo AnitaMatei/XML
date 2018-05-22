@@ -215,9 +215,8 @@ void XMLDoc::deleteNode(string nod, string All_or_Current)
 	{
 		tree.deleteCurr();
 	}
-	else
+	else if (All_or_Current == "Current")
 	{
-		if (All_or_Current == "Current")
 			tree.deleteOnlyCurr();
 	}
 }
@@ -227,9 +226,9 @@ void XMLDoc::gotoRoot()
 	tree.goUpMax();
 }
 
-void XMLDoc::delAtribut(string nod)
+void XMLDoc::delAtribut(string x)
 {
-	tree.deleteAttrib(nod);
+	tree.deleteAttrib(x);
 }
 
 
