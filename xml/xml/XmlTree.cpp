@@ -54,9 +54,16 @@ void XmlTree::deleteOnlyCurr() {
 	{
 		curr->adr[i]->parent = curr->parent;
 		curr->parent->adr.push_back(curr->adr[i]);
+		curr->adr.erase(curr->adr.begin() + i);
 	}
 	nod *ccurr = curr;  //copie curr folosita pt a sterge pointerul
-	curr = curr->parent;
+	curr = curr->parent; 
+	for (int i = 0; i<curr->adr.size(); i++)                    
+		if (curr->adr[i]->tag == ccurr->tag)
+		{
+			curr->adr.erase(curr->adr.begin() + i);
+			break;
+		}
 	delete ccurr;
 }
 void XmlTree::afisareCurr() {
@@ -91,16 +98,24 @@ void XmlTree::replaceName(string value) {
 
 void XmlTree::recDeletion(nod* startingPoint) {
 	for (int i = 0; i < startingPoint->adr.size(); i++) {
-		if (startingPoint->adr[i]->adr.size()>0)
+		if (startingPoint->adr[i]->adr.size() > 0)
 			recDeletion(startingPoint->adr[i]);   //daca are copii urmatorul nod, avansezi pe el
-
-		delete startingPoint->adr[i];  //altfel, delete direct
+		delete startingPoint->adr[i];
+		startingPoint->adr.erase(startingPoint->adr.begin() + i);
 	}
 }
 
 void XmlTree::deleteCurr() {
 	nod* ccurr = curr;   //copie a lui curr pt a nu ramane cu pointeri pe care nu ii putem accesa
+	curr = curr->parent;
 	recDeletion(ccurr);
+	for(int i=0;i<curr->adr.size();i++)                     //cauti unde se afla nodul curent in vectorul de adrese al parintelui si ii dai erase din vector
+		if (curr->adr[i]->tag == ccurr->tag)
+		{
+			curr->adr.erase(curr->adr.begin() + i);
+			break;
+		}
+	delete ccurr;              //dupa care delete
 }
 
 
