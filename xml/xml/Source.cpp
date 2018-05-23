@@ -5,10 +5,9 @@
 using namespace std;
 
 int main() {
-	XMLDoc q("XMLin.xml","caine.xml");
+	////Soruce.cpp folosit pt debug
+	XMLDoc q("XMLin.xml", "XMLout.xml");
 	q.read();
-	q.deleteNode("RenderProfile", "Current");
 	q.save();
-
 	system("pause");
 }
