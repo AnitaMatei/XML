@@ -13,7 +13,7 @@ class XmlTree {
 		vector<string> attrib;
 		vector<string> attribValues;
 		string value;
-
+		int nivel;
 		int tag;
 
 		vector<nod*> adr;
@@ -29,7 +29,7 @@ public:
 	void init();
 
 	void insert();
-
+	int getNivel();
 	int goDown(int index);         //coboara jos pe copilul precizat
 	int goDownLast();          //coboara jos pe ultimul copil adaugat
 	int goUp(int times);         //se urca sus de cate ori ii zici

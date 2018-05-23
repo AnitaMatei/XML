@@ -5,12 +5,15 @@ void XmlTree::init() {
 	curr->parent = NULL;
 	curr->tag = tag;
 	tag++;
+	curr->nivel = 0;
 }
 
 void XmlTree::insert() {
+	
 	curr->adr.push_back(new nod());
 	curr->adr[curr->adr.size() - 1]->parent = curr;
 	curr->adr[curr->adr.size() - 1]->tag = tag;
+	curr->adr[curr->adr.size() - 1]->nivel = curr->nivel + 1;
 	tag++;
 }
 int XmlTree::goDown(int index) {
@@ -28,7 +31,7 @@ int XmlTree::goDownLast() {
 	else return 0;
 }
 int XmlTree::goUp(int times) {
-	if (curr->parent != NULL && times>=1)
+	if (curr->parent != NULL && times >= 1)
 	{
 		while (times > 0) {
 			curr = curr->parent;
@@ -49,7 +52,7 @@ int XmlTree::goUpMax() {
 	return 0;
 }
 
-void XmlTree::deleteOnlyCurr() {   
+void XmlTree::deleteOnlyCurr() {
 	for (int i = 0; i < curr->adr.size(); i++)
 	{
 		curr->adr[i]->parent = curr->parent;
@@ -57,8 +60,8 @@ void XmlTree::deleteOnlyCurr() {
 		curr->adr.erase(curr->adr.begin() + i);
 	}
 	nod *ccurr = curr;  //copie curr folosita pt a sterge pointerul
-	curr = curr->parent; 
-	for (int i = 0; i<curr->adr.size(); i++)                    
+	curr = curr->parent;
+	for (int i = 0; i<curr->adr.size(); i++)
 		if (curr->adr[i]->tag == ccurr->tag)
 		{
 			curr->adr.erase(curr->adr.begin() + i);
@@ -109,7 +112,7 @@ void XmlTree::deleteCurr() {
 	nod* ccurr = curr;   //copie a lui curr pt a nu ramane cu pointeri pe care nu ii putem accesa
 	curr = curr->parent;
 	recDeletion(ccurr);
-	for(int i=0;i<curr->adr.size();i++)                     //cauti unde se afla nodul curent in vectorul de adrese al parintelui si ii dai erase din vector
+	for (int i = 0; i<curr->adr.size(); i++)                     //cauti unde se afla nodul curent in vectorul de adrese al parintelui si ii dai erase din vector
 		if (curr->adr[i]->tag == ccurr->tag)
 		{
 			curr->adr.erase(curr->adr.begin() + i);
@@ -122,7 +125,7 @@ void XmlTree::deleteCurr() {
 void XmlTree::recDisplay(nod* startingPoint, int depth) {         //depth ca sa stiu la ce nivel ma aflu in tree
 	for (int i = 0; i < startingPoint->adr.size(); i++)
 	{
-		int cdepth=depth;
+		int cdepth = depth;
 		while (cdepth > 0)
 		{
 			cout << '\t';
@@ -130,20 +133,20 @@ void XmlTree::recDisplay(nod* startingPoint, int depth) {         //depth ca sa 
 		}
 		cout << startingPoint->adr[i]->name << endl;
 		if (startingPoint->adr[i]->adr.size() > 0)
-			recDisplay(startingPoint->adr[i],depth+1);
+			recDisplay(startingPoint->adr[i], depth + 1);
 	}
 }
 
 void XmlTree::displayTree() {
-	
-	nod* ccurr = curr;  
+
+	nod* ccurr = curr;
 	while (ccurr->parent != NULL)       //ne intoarcem mai intai la radacina cu copia
 		ccurr = ccurr->parent;
 	cout << ccurr->name << endl;
-	recDisplay(ccurr,1);
+	recDisplay(ccurr, 1);
 }
 
-int XmlTree::showAttrib(int howMany ) {
+int XmlTree::showAttrib(int howMany) {
 	if (howMany > curr->attrib.size())
 		return 0;
 	for (int i = 0; i < howMany; i++)
@@ -157,6 +160,9 @@ int XmlTree::getTag() {
 }
 string XmlTree::getName() {
 	return curr->name;
+}
+int XmlTree::getNivel() {
+	return curr->nivel;
 }
 string XmlTree::getAttrib(int index) {
 	return curr->attrib[index];

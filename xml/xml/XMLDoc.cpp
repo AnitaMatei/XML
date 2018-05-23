@@ -33,9 +33,9 @@ void XMLDoc::parse()
 	while (fin >> c)
 	{
 		//conditii pt extragerea atributelor si valorilor lor
-		if (nameEnded && c!='>')
+		if (nameEnded && c != '>')
 		{
-			if (atribEnded==false)
+			if (atribEnded == false)
 				atrib += c;
 			curm = fin.peek();
 			if (curm == '=')
@@ -43,7 +43,7 @@ void XMLDoc::parse()
 				atribEnded = true; valueEnded = false;
 				fin >> c; fin >> c;
 			}
-			if (valueEnded==false)
+			if (valueEnded == false)
 			{
 				fin >> c;
 				if (c != '"')
@@ -118,11 +118,9 @@ void XMLDoc::setDocSaveName(const string s) {
 	docSaveName = s;
 }
 
-/////
-//creez fiecare linie in parte
-//daca nu are copii nodul actual, creez linia, o inchid si o afisez
-//daca are copii, atunci creez linia si o afisez, ma duc recursiv pe copii si la intoarcere il inchid
-///////
+
+
+
 void XMLDoc::createLine(int depth) {
 	string line;
 	line.clear();
@@ -150,7 +148,7 @@ void XMLDoc::createLine(int depth) {
 			tree.goUp(1);
 		}
 		line.clear();
-		for (int j = 0; j < depth ; j++)
+		for (int j = 0; j < depth; j++)
 			line += "\t";
 		line += "</" + tree.getName() + ">";
 		fout << line << endl;
@@ -161,7 +159,7 @@ void XMLDoc::createLine(int depth) {
 void XMLDoc::save() {
 	tree.goUpMax();
 	fout.open(docSaveName);
-	fout << version<<endl;
+	fout << version << endl;
 	createLine(0);
 	fout.close();
 }
@@ -176,22 +174,22 @@ void XMLDoc::recsearch(string x, bool & p)
 			p = false;
 			return;
 		}
-		for (i=0;i<tree.getChildrenNr();i++)
+		for (i = 0; i<tree.getChildrenNr(); i++)
 		{
-		    tree.goDown(i);
-		    recsearch(x,p);
-			if(p==true)
-			tree.goUp(1);
+			tree.goDown(i);
+			recsearch(x, p);
+			if (p == true)
+				tree.goUp(1);
 		}
 	}
-	
+
 }
 
 void XMLDoc::gotonode(string x)
 {
 	bool c = true;
-    tree.goUpMax();
-    recsearch(x, c);
+	tree.goUpMax();
+	recsearch(x, c);
 }
 
 void XMLDoc::addNode(string nod, string name)
@@ -217,7 +215,7 @@ void XMLDoc::deleteNode(string nod, string All_or_Current)
 	}
 	else if (All_or_Current == "Current")
 	{
-			tree.deleteOnlyCurr();
+		tree.deleteOnlyCurr();
 	}
 }
 
@@ -225,6 +223,33 @@ void XMLDoc::gotoRoot()
 {
 	tree.goUpMax();
 }
+
+void XMLDoc::Parcurgere()
+{
+	int i, j;
+	for (i = 0; i<tree.getChildrenNr(); i++)
+	{
+		tree.goDown(i);
+		for (j = 0; j < tree.getNivel(); j++)
+		{
+			cout << "\t";
+		}
+		cout << tree.getNivel() << " ";
+		ShowName();
+		ShowAttrib();
+		cout << endl;
+		Parcurgere();
+		tree.goUp(1);
+	}
+}
+
+void XMLDoc::displayTree()
+{
+	gotoRoot();
+	ShowName();
+	ShowAttrib();
+	Parcurgere();
+ }
 
 void XMLDoc::delAtribut(string x)
 {
@@ -234,7 +259,16 @@ void XMLDoc::delAtribut(string x)
 
 string XMLDoc::ShowName()
 {
-	cout<<tree.getName()<<endl;
+	cout << tree.getName() << endl;
 	return tree.getName();
 
+}
+
+void XMLDoc::ShowAttrib()
+{
+	int i;
+	for (i = 0; i < tree.getAttribNr(); i++)
+	{
+		cout << " " << tree.getAttrib(i) << "=" << tree.getAttribValue(i);
+	}
 }

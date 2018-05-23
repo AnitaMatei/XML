@@ -16,13 +16,13 @@ class XMLDoc {
 	bool firstNod = true;
 	ifstream fin;
 	ofstream fout;
-	
+
 	void skipChar(bool &nameEnded, char &c);
 	void checkVer();
 	void parse();
 	void createLine(int depth);
 public:
-	XMLDoc(const string docReadName=" ", const string docSaveName=" ");
+	XMLDoc(const string docReadName = " ", const string docSaveName = " ");
 	void read();
 	void save();
 
@@ -33,9 +33,11 @@ public:
 	void deleteNode(string nod, string All_or_Current);
 	void delAtribut(string x);
 	void gotoRoot();
-
+	void displayTree();
+	void Parcurgere();
+	void ShowAttrib();
 	string ShowName();
-
+	        
 	string getDocReadName();
 	string getDocSaveName();
 	void setDocReadName(const string s);
