@@ -94,7 +94,6 @@ void XMLDoc::read() {
 	{
 		checkVer(); parse();
 	}
-	tree.displayTree();
 	fin.close();
 }
 
@@ -110,9 +109,6 @@ void XMLDoc::setDocReadName(const string s) {
 void XMLDoc::setDocSaveName(const string s) {
 	docSaveName = s;
 }
-
-
-
 
 void XMLDoc::createLine(int depth) {
 	string line;
@@ -157,7 +153,6 @@ void XMLDoc::save() {
 
 void XMLDoc::recsearch(string x, bool & p)
 {
-	int i;
 	if (p == true)
 	{
 		if (tree.getName() == x)
@@ -165,7 +160,7 @@ void XMLDoc::recsearch(string x, bool & p)
 			p = false;
 			return;
 		}
-		for (i = 0; i<tree.getChildrenNr(); i++)
+		for (int i = 0; i<tree.getChildrenNr(); i++)
 		{
 			tree.goDown(i);
 			recsearch(x, p);
@@ -173,7 +168,6 @@ void XMLDoc::recsearch(string x, bool & p)
 				tree.goUp(1);
 		}
 	}
-
 }
 
 void XMLDoc::gotonode(string x)
@@ -185,10 +179,8 @@ void XMLDoc::gotonode(string x)
 
 void XMLDoc::addNode(string nod, string name)
 {
-	gotonode(nod);
-	tree.insert();
-	tree.goDownLast();
-	tree.replaceName(name);
+	gotonode(nod); tree.insert();
+	tree.goDownLast(); tree.replaceName(name);
 }
 
 void XMLDoc::addAtribut(string nod, string atribut, string valatribut)
@@ -201,13 +193,9 @@ void XMLDoc::deleteNode(string nod, string All_or_Current)
 {
 	gotonode(nod);
 	if (All_or_Current == "All")
-	{
 		tree.deleteCurr();
-	}
 	else if (All_or_Current == "Current")
-	{
 		tree.deleteOnlyCurr();
-	}
 }
 
 void XMLDoc::gotoRoot()
@@ -217,49 +205,38 @@ void XMLDoc::gotoRoot()
 
 void XMLDoc::Parcurgere()
 {
-	int i, j;
-	for (i = 0; i<tree.getChildrenNr(); i++)
+	for (int i = 0; i<tree.getChildrenNr(); i++)
 	{
 		tree.goDown(i);
-		for (j = 0; j < tree.getNivel(); j++)
-		{
+		for (int j = 0; j < tree.getNivel(); j++)
 			cout << "\t";
-		}
 		cout << tree.getNivel() << " ";
-		ShowName();
-		ShowAttrib();
-		cout << endl;
-		Parcurgere();
+		ShowName(); ShowAttrib();
+		cout << endl; Parcurgere();
 		tree.goUp(1);
 	}
 }
 
 void XMLDoc::displayTree()
 {
-	gotoRoot();
-	ShowName();
-	ShowAttrib();
-	Parcurgere();
+	gotoRoot(); ShowName();
+	ShowAttrib(); Parcurgere();
  }
 
-void XMLDoc::delAtribut(string x)
+void XMLDoc::delAtribut(string node, string attrib)
 {
-	tree.deleteAttrib(x);
+	gotonode(node);
+	tree.deleteAttrib(attrib);
 }
-
 
 string XMLDoc::ShowName()
 {
 	cout << tree.getName() << endl;
 	return tree.getName();
-
 }
 
 void XMLDoc::ShowAttrib()
 {
-	int i;
-	for (i = 0; i < tree.getAttribNr(); i++)
-	{
+	for (int i = 0; i < tree.getAttribNr(); i++)
 		cout << " " << tree.getAttrib(i) << "=" << tree.getAttribValue(i);
-	}
 }
