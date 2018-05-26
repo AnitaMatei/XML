@@ -31,7 +31,7 @@ void XMLDoc::parse()
 		//conditii pt extragerea atributelor si valorilor lor
 		if (nameEnded && c != '>')
 		{
-			if (!atribEnded)
+			if (!atribEnded && c != ' ')
 				atrib += c;
 			curm = fin.peek();
 			if (curm == '=')
@@ -42,16 +42,12 @@ void XMLDoc::parse()
 			if (!valueEnded)
 			{
 				fin >> c;
-				if (c != '"')
-				{
-					valatrib += c; fin >> c;
-				}
 				while (c != '"')
 				{
 					valatrib += c; fin >> c;
 				}
 				tree.addAttrib(atrib, valatrib);
-				atrib.clear(); valatrib = "";
+				atrib.clear(); valatrib.clear();
 				valueEnded = true; atribEnded = false;
 			}
 		}
@@ -79,12 +75,13 @@ void XMLDoc::parse()
 			if (firstNod)
 			{
 				tree.init(); firstNod = false;
+				parse();
 			}
 			else if (canInsert)
 			{
 				tree.insert(); tree.goDownLast();
+				parse();
 			}
-			parse();
 		}
 	}
 }
@@ -92,11 +89,12 @@ void XMLDoc::read() {
 	fin.open(docReadName);
 	fin >> noskipws;
 	if (!fin.is_open())
-		cout << "Eroare la deschidere fisier";
+		cout << "Error while trying to open file";
 	else
 	{
 		checkVer(); parse();
 	}
+	tree.displayTree();
 	fin.close();
 }
 
@@ -125,12 +123,10 @@ void XMLDoc::createLine(int depth) {
 	line += "<" + tree.getName();
 	for (int i = 0; i < tree.getAttribNr(); i++)
 	{
-		if (i == 0)
-			line += " ";
-		line += tree.getAttrib(i) + "=" + "\"" + tree.getAttribValue(i) + "\"";
+		line += " " + tree.getAttrib(i) + "=" + "\"" + tree.getAttribValue(i) + "\"";
 	}
 	if (tree.getChildrenNr() == 0) {
-		line += " />";
+		line += "/>";
 		fout << line << endl;;
 	}
 	else {
