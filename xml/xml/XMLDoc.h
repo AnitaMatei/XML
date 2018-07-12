@@ -21,20 +21,20 @@ class XMLDoc {
 	void checkVer();
 	void parse();
 	void createLine(int depth);
+	void recsearch(string x, bool & p);
+	void Parcurgere();
 public:
 	XMLDoc(const string docReadName = " ", const string docSaveName = " ");
 	void read();
 	void save();
 
 	void gotonode(string x);
-	void recsearch(string x, bool & p);
 	void addNode(string nod, string name);
 	void addAtribut(string nod, string atribut, string valatribut);
 	void deleteNode(string nod, string All_or_Current);
-	void delAtribut(string x);
+	void delAtribut(string node, string attrib);
 	void gotoRoot();
 	void displayTree();
-	void Parcurgere();
 	void ShowAttrib();
 	string ShowName();
 	        

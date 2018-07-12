@@ -31,7 +31,7 @@ void XMLDoc::parse()
 		//conditii pt extragerea atributelor si valorilor lor
 		if (nameEnded && c != '>')
 		{
-			if (!atribEnded)
+			if (!atribEnded && c != ' ')
 				atrib += c;
 			curm = fin.peek();
 			if (curm == '=')
@@ -42,16 +42,12 @@ void XMLDoc::parse()
 			if (!valueEnded)
 			{
 				fin >> c;
-				if (c != '"')
-				{
-					valatrib += c; fin >> c;
-				}
 				while (c != '"')
 				{
 					valatrib += c; fin >> c;
 				}
 				tree.addAttrib(atrib, valatrib);
-				atrib.clear(); valatrib = "";
+				atrib.clear(); valatrib.clear();
 				valueEnded = true; atribEnded = false;
 			}
 		}
@@ -79,12 +75,13 @@ void XMLDoc::parse()
 			if (firstNod)
 			{
 				tree.init(); firstNod = false;
+				parse();
 			}
 			else if (canInsert)
 			{
 				tree.insert(); tree.goDownLast();
+				parse();
 			}
-			parse();
 		}
 	}
 }
@@ -92,7 +89,7 @@ void XMLDoc::read() {
 	fin.open(docReadName);
 	fin >> noskipws;
 	if (!fin.is_open())
-		cout << "Eroare la deschidere fisier";
+		cout << "Error while trying to open file";
 	else
 	{
 		checkVer(); parse();
@@ -113,9 +110,6 @@ void XMLDoc::setDocSaveName(const string s) {
 	docSaveName = s;
 }
 
-
-
-
 void XMLDoc::createLine(int depth) {
 	string line;
 	line.clear();
@@ -125,12 +119,10 @@ void XMLDoc::createLine(int depth) {
 	line += "<" + tree.getName();
 	for (int i = 0; i < tree.getAttribNr(); i++)
 	{
-		if (i == 0)
-			line += " ";
-		line += tree.getAttrib(i) + "=" + "\"" + tree.getAttribValue(i) + "\"";
+		line += " " + tree.getAttrib(i) + "=" + "\"" + tree.getAttribValue(i) + "\"";
 	}
 	if (tree.getChildrenNr() == 0) {
-		line += " />";
+		line += "/>";
 		fout << line << endl;;
 	}
 	else {
@@ -161,7 +153,6 @@ void XMLDoc::save() {
 
 void XMLDoc::recsearch(string x, bool & p)
 {
-	int i;
 	if (p == true)
 	{
 		if (tree.getName() == x)
@@ -169,7 +160,7 @@ void XMLDoc::recsearch(string x, bool & p)
 			p = false;
 			return;
 		}
-		for (i = 0; i<tree.getChildrenNr(); i++)
+		for (int i = 0; i<tree.getChildrenNr(); i++)
 		{
 			tree.goDown(i);
 			recsearch(x, p);
@@ -177,7 +168,6 @@ void XMLDoc::recsearch(string x, bool & p)
 				tree.goUp(1);
 		}
 	}
-
 }
 
 void XMLDoc::gotonode(string x)
@@ -189,10 +179,8 @@ void XMLDoc::gotonode(string x)
 
 void XMLDoc::addNode(string nod, string name)
 {
-	gotonode(nod);
-	tree.insert();
-	tree.goDownLast();
-	tree.replaceName(name);
+	gotonode(nod); tree.insert();
+	tree.goDownLast(); tree.replaceName(name);
 }
 
 void XMLDoc::addAtribut(string nod, string atribut, string valatribut)
@@ -205,13 +193,9 @@ void XMLDoc::deleteNode(string nod, string All_or_Current)
 {
 	gotonode(nod);
 	if (All_or_Current == "All")
-	{
 		tree.deleteCurr();
-	}
 	else if (All_or_Current == "Current")
-	{
 		tree.deleteOnlyCurr();
-	}
 }
 
 void XMLDoc::gotoRoot()
@@ -221,49 +205,38 @@ void XMLDoc::gotoRoot()
 
 void XMLDoc::Parcurgere()
 {
-	int i, j;
-	for (i = 0; i<tree.getChildrenNr(); i++)
+	for (int i = 0; i<tree.getChildrenNr(); i++)
 	{
 		tree.goDown(i);
-		for (j = 0; j < tree.getNivel(); j++)
-		{
+		for (int j = 0; j < tree.getNivel(); j++)
 			cout << "\t";
-		}
 		cout << tree.getNivel() << " ";
-		ShowName();
-		ShowAttrib();
-		cout << endl;
-		Parcurgere();
+		ShowName(); ShowAttrib();
+		cout << endl; Parcurgere();
 		tree.goUp(1);
 	}
 }
 
 void XMLDoc::displayTree()
 {
-	gotoRoot();
-	ShowName();
-	ShowAttrib();
-	Parcurgere();
+	gotoRoot(); ShowName();
+	ShowAttrib(); Parcurgere();
  }
 
-void XMLDoc::delAtribut(string x)
+void XMLDoc::delAtribut(string node, string attrib)
 {
-	tree.deleteAttrib(x);
+	gotonode(node);
+	tree.deleteAttrib(attrib);
 }
-
 
 string XMLDoc::ShowName()
 {
 	cout << tree.getName() << endl;
 	return tree.getName();
-
 }
 
 void XMLDoc::ShowAttrib()
 {
-	int i;
-	for (i = 0; i < tree.getAttribNr(); i++)
-	{
+	for (int i = 0; i < tree.getAttribNr(); i++)
 		cout << " " << tree.getAttrib(i) << "=" << tree.getAttribValue(i);
-	}
 }
